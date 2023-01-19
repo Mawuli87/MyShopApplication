@@ -5,7 +5,7 @@
     <solid android:color="@color/white"/>
     <stroke android:color="@color/g_icon_tint"
         android:dashGap="0dp"
-        android:width="@dimen/_2sdp"/>
+        android:width="2dp"/>
 
 
 </shape>
