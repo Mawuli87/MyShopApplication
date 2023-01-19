@@ -11,7 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import com.messieyawo.com.myshopapplication.data.User
 import com.messieyawo.com.myshopapplication.databinding.FragmentRegisterBinding
 import com.messieyawo.com.myshopapplication.resource.Resource
+import com.messieyawo.com.myshopapplication.utils.RegisterValidation
 import com.messieyawo.com.myshopapplication.viewmodel.RegisterViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.withContext
 
 
 class RegisterFragment:Fragment() {
@@ -57,6 +61,28 @@ private val viewmodel by viewModels<RegisterViewModel>()
                         Log.d("Test",it.message.toString())
                         binding.btnRegister.revertAnimation()
                     }else -> Unit
+                }
+            }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            viewmodel.validation.collect {validation ->
+                if (validation.email is RegisterValidation.Failed){
+                    withContext(Dispatchers.Main){
+                        binding.edEmail.apply {
+                            requestFocus()
+                            error = validation.email.message
+                        }
+                    }
+                }
+
+                if (validation.password is RegisterValidation.Failed){
+                    withContext(Dispatchers.Main){
+                        binding.edPassword.apply {
+                            requestFocus()
+                            error = validation.password.message
+                        }
+                    }
                 }
             }
         }
